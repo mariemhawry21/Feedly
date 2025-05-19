@@ -1,0 +1,26 @@
+
+body {
+  padding: 0;
+  margin: 0;
+}
+#root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: black;
+  background-color: white;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0 !important;
+  padding: 0;
+  box-sizing: border-box;
+}
+:root {
+  --light-blue: #c0dbea;
+  --light-bink: #d885a3;
+}
