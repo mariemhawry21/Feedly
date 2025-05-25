@@ -63,10 +63,14 @@ const Login = () => {
       >
         {!isMobile && (
           <Box flex={1}>
-            <img
+            <motion.img
               src={img}
               alt="illustration"
               style={{ width: "100%", objectFit: "contain" }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              whileHover={{ scale: 1.05 }}
             />
           </Box>
         )}
@@ -103,6 +107,7 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
               required
+              autoComplete="email"
             />
 
             <TextField
@@ -113,12 +118,16 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               fullWidth
               required
+              autoComplete="current-password"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       onClick={() => setShowPassword((prev) => !prev)}
                       edge="end"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -127,7 +136,12 @@ const Login = () => {
               }}
             />
             {error && (
-              <Typography color="error" textAlign="center">
+              <Typography
+                color="error"
+                textAlign="center"
+                role="alert"
+                sx={{ mt: 1, mb: 1 }}
+              >
                 {error}
               </Typography>
             )}

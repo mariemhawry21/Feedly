@@ -8,6 +8,7 @@ import EditPost from "./views/EditPost";
 import Layout from "./components/Layout";
 import { useAuth } from "./contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
+import { FilterProvider } from "./contexts/FilterContext";
 
 import LoadingThreeDotsJumping from "./components/Loading";
 function App() {

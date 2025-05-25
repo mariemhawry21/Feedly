@@ -1,6 +1,6 @@
 // ErrorBoundary.js
 import React from "react";
-
+import errorImg from "../assets/3828537.jpg";
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +18,22 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <div>Something went wrong.</div>;
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <img
+            src={errorImg}
+            alt="error image"
+            style={{ maxWidth: "100%", maxHeight: "500px" }}
+          />
+        </div>
+      );
     }
     return this.props.children;
   }

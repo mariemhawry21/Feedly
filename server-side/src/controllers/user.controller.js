@@ -65,12 +65,23 @@ const getUserProfile = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
   try {
-    const { firstname, lastname, email } = req.body;
+    const updates = {};
+
+    // Only update fields that are provided in the request
+    if (req.body.avatar) updates.avatar = req.body.avatar;
+    if (req.body.firstname) updates.firstname = req.body.firstname;
+    if (req.body.lastname) updates.lastname = req.body.lastname;
+    if (req.body.email) updates.email = req.body.email;
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { firstname, lastname, email },
-      { new: true }
+      updates,
+      { new: true, runValidators: true } // runValidators ensures updated data follows schema rules
     ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     res.json(user);
   } catch (err) {

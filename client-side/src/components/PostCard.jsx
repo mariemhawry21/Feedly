@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -22,59 +22,85 @@ import {
   ListItemIcon,
   ListItemText,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import {
   MoreVert,
-  ThumbUpAlt,
-  Favorite,
-  SentimentSatisfied,
-  EmojiObjects,
-  SentimentDissatisfied,
-  Whatshot,
   Share,
   ContentCopy,
   Twitter,
   Facebook,
   Close,
+  ChatBubbleOutline,
+  Image,
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { deletePost } from "../services/postService";
+import { addComment, deletePost, getComments } from "../services/postService";
+import haha from "../assets/haha.svg";
+import care from "../assets/care.svg";
+import sad from "../assets/sad.svg";
+import love from "../assets/love.svg";
+import like from "../assets/like.svg";
+import wow from "../assets/wow.svg";
+import angry from "../assets/angry.svg";
+import close from "../assets/close.svg";
+import thumbUp from "../assets/thumbUp.svg";
+import Comment from "./Comment"; 
+import CommentForm from "./CommentForm"; 
+const LikeIcon = () => <img src={like} alt="like" width={28} height={28} />;
+const LoveIcon = () => <img src={love} alt="love" width={28} height={28} />;
+const HahaIcon = () => <img src={haha} alt="haha" width={28} height={28} />;
+const WowIcon = () => <img src={wow} alt="wow" width={28} height={28} />;
+const CareIcon = () => <img src={care} alt="care" width={28} height={28} />;
+const SadIcon = () => <img src={sad} alt="sad" width={28} height={28} />;
+const AngryIcon = () => <img src={angry} alt="angry" width={28} height={28} />;
+const CloseIcon = () => <img src={close} alt="close" width={28} height={28} />;
+const ThumbUp = () => (
+  <img src={thumbUp} alt="thumpUp" width={28} height={28} />
+);
+
 // Reaction types with proper styling
 const reactionTypes = [
   {
     name: "like",
-    icon: ThumbUpAlt,
+    icon: LikeIcon,
     color: "primary",
     customColor: "#1976d2",
   },
   {
     name: "love",
-    icon: Favorite,
+    icon: LoveIcon,
     color: "error",
     customColor: "#f44336",
   },
   {
     name: "haha",
-    icon: SentimentSatisfied,
+    icon: HahaIcon,
     color: "warning",
     customColor: "#ff9800",
   },
   {
     name: "wow",
-    icon: EmojiObjects,
+    icon: WowIcon,
+    color: "warning",
+    customColor: "#ffc107",
+  },
+  {
+    name: "care",
+    icon: CareIcon,
     color: "warning",
     customColor: "#ffc107",
   },
   {
     name: "sad",
-    icon: SentimentDissatisfied,
+    icon: SadIcon,
     color: "info",
     customColor: "#2196f3",
   },
   {
     name: "angry",
-    icon: Whatshot,
+    icon: AngryIcon,
     color: "error",
     customColor: "#d32f2f",
   },
@@ -83,7 +109,7 @@ const reactionTypes = [
 // Separate remove reaction option
 const removeReactionOption = {
   name: null,
-  icon: Close,
+  icon: CloseIcon,
   color: "action",
   customColor: "#757575",
 };
@@ -96,7 +122,11 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
   const [deleting, setDeleting] = useState(false);
   const [reactionAnchor, setReactionAnchor] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
+  // Add these new states for comments
+  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(post.commentCount || 0);
+  const [loadingComments, setLoadingComments] = useState(false);
   const isAuthor = user?._id === post.user?._id;
   const openMenu = Boolean(anchorEl);
   const openReactions = Boolean(reactionAnchor);
@@ -201,17 +231,16 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
       console.error("Reaction error:", error);
     }
   };
-
   const renderReactionIcon = () => {
-    // Show neutral like icon when no reaction
     if (!userReaction) {
       return (
         <>
-          <ThumbUpAlt
-            fontSize="medium"
-            sx={{
-              color: "text.secondary",
+          <ThumbUp
+            style={{
+              filter: "grayscale(100%)",
+              opacity: 0.6,
               "&:hover": { transform: "scale(1.1)" },
+              cursor: "pointer",
             }}
           />
           <p style={{ marginLeft: "10px" }}>like</p>
@@ -223,11 +252,12 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
     if (!reaction) {
       return (
         <>
-          <ThumbUpAlt
-            fontSize="medium"
-            sx={{
-              color: "text.secondary",
+          <ThumbUp
+            style={{
+              filter: "grayscale(100%)",
+              opacity: 0.6,
               "&:hover": { transform: "scale(1.1)" },
+              cursor: "pointer",
             }}
           />
           <p style={{ marginLeft: "10px" }}>like</p>
@@ -236,19 +266,21 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
     }
 
     const IconComponent = reaction.icon;
+
     return (
       <>
         <IconComponent
-          fontSize="medium"
-          sx={{
+          style={{
             color: reaction.customColor,
             animation: `${userReaction ? "bounce 0.5s" : ""}`,
             "&:hover": { transform: "scale(1.1)" },
             cursor: "pointer",
+            fontWeight: "bold",
           }}
         />
-
-        <p style={{ marginLeft: "10px" }}>{reaction.name}</p>
+        <p style={{ marginLeft: "10px", fontWeight: "bold" }}>
+          {reaction.name}
+        </p>
       </>
     );
   };
@@ -326,6 +358,74 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
     clearTimeout(closeTimeoutRef.current);
   };
 
+  // Function to fetch comments
+  const fetchComments = async () => {
+    if (!showComments) return; // Only fetch when comments are shown
+
+    try {
+      setLoadingComments(true);
+      const { comments } = await getComments(post._id);
+
+      // Initialize with empty replies array if not provided
+      setComments(
+        comments.map((c) => ({
+          ...c,
+          replies: c.replies || [],
+        }))
+      );
+    } catch (err) {
+      console.error("Failed to fetch comments:", err);
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  // Function to add a new comment
+  const handleAddComment = async (content, parentId = null) => {
+    if (!user) {
+      handleRequireLogin();
+      return;
+    }
+
+    try {
+      const newComment = await addComment(post._id, { content, parentId });
+      // Safely update comments state
+      if (parentId) {
+        // For replies, update only the specific comment's replies
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === parentId
+              ? {
+                  ...comment,
+                  replies: [...(comment.replies || []), newComment],
+                  replyCount: (comment.replyCount || 0) + 1,
+                }
+              : comment
+          )
+        );
+      } else {
+        // For top-level comments, add to main comments list
+        setComments((prev) => [newComment, ...prev]);
+        setCommentCount((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    }
+  };
+  const handleDeleteComment = (commentId) => {
+    setComments((prev) => prev.filter((c) => c._id !== commentId));
+  };
+  // Function to toggle comments visibility
+  const toggleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
+  // Fetch comments when showComments changes
+  useEffect(() => {
+    if (showComments) {
+      fetchComments();
+    }
+  }, [showComments]);
   return (
     <Card
       sx={{
@@ -396,6 +496,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "flex-start",
+          px: 0,
         }}
       >
         <Box
@@ -403,9 +504,16 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
             borderBottom: "1px solid #eee",
             width: "100%",
             paddingBottom: "10px",
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "10px",
           }}
         >
           {renderReactionSummary()}
+          <Typography variant="body2" sx={{ ml: 0.5 }}>
+            {commentCount > 0 ? commentCount : 0} Comment
+            {commentCount !== 1 ? "s" : ""}
+          </Typography>
         </Box>
         <Divider />
         <Box
@@ -415,6 +523,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
             alignItems: "center",
             width: "100%",
             justifyContent: "space-between",
+            marginTop: "2px",
           }}
         >
           <Box
@@ -425,7 +534,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
-              padding:'0 20px'
+              padding: "0 20px",
             }}
           >
             <style>{bounceAnimation}</style>
@@ -436,9 +545,41 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                width: "100%",
+                ":hover": {
+                  color: "black",
+                  backgroundColor: "#eee",
+                  cursor: "pointer",
+                },
               }}
             >
               {renderReactionIcon()}
+            </Box>
+            {/* Comment button */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                width: "100%",
+                ":hover": {
+                  color: "black",
+                  backgroundColor: "#eee",
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <Box
+                onClick={toggleComments}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <ChatBubbleOutline sx={{ mr: 0.5 }} />
+                <p style={{ marginLeft: "10px" }}>Comment</p>
+              </Box>
             </Box>
             {/* Share Button */}
             <Box
@@ -446,6 +587,11 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                width: "100%",
+                ":hover": {
+                  color: "black",
+                  backgroundColor: "#eee",
+                },
               }}
             >
               <IconButton aria-label="share" onClick={handleShareClick}>
@@ -476,7 +622,6 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                 </MenuItem>
               ))}
             </Menu>
-
             <Popover
               open={openReactions}
               anchorEl={reactionAnchor}
@@ -487,7 +632,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                 "& .MuiPopover-paper": {
                   width: "auto",
                   minWidth: "unset",
-                  maxWidth: "100%", // Constrain to anchor width
+                  maxWidth: "100%",
                   borderRadius: "24px",
                   boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                   p: 1,
@@ -503,20 +648,20 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                   "& .MuiIconButton-root:hover": { transform: "scale(1.3)" },
                 }}
               >
-                {reactionTypes.map((reaction) => (
-                  <IconButton
-                    key={reaction.name}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleReactionClick(reaction);
-                    }}
-                  >
-                    <reaction.icon
-                      fontSize="large"
-                      sx={{ color: reaction.customColor }}
-                    />
-                  </IconButton>
-                ))}
+                {reactionTypes.map((reaction) => {
+                  const IconComponent = reaction.icon;
+                  return (
+                    <IconButton
+                      key={reaction.name}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleReactionClick(reaction);
+                      }}
+                    >
+                      <IconComponent />
+                    </IconButton>
+                  );
+                })}
                 {userReaction && (
                   <Tooltip title="Remove reaction">
                     <IconButton
@@ -533,6 +678,40 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
             </Popover>
           </Box>
         </Box>
+        {/* Comments section */}
+        {showComments && (
+          <Box sx={{ width: "100%", p: 2 }}>
+            {/* Comments list */}
+            {loadingComments ? (
+              <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+                <CircularProgress size={24} />
+              </Box>
+            ) : comments.length > 0 ? (
+              <Box sx={{ mt: 2 }}>
+                {comments.map((comment) => (
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    replies={comment.replies || []} // Pass replies as prop
+                    onReply={handleAddComment}
+                    currentUser={user}
+                    onDelete={handleDeleteComment}
+                  />
+                ))}
+              </Box>
+            ) : (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ textAlign: "center", py: 2 }}
+              >
+                No comments yet. Be the first to comment!
+              </Typography>
+            )}
+            {/* Comment form */}
+            <CommentForm onSubmit={handleAddComment} />
+          </Box>
+        )}
       </CardActions>
       <Snackbar
         open={snackbarOpen}

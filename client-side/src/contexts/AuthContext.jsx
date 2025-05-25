@@ -44,6 +44,12 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (updatedData) => {
+    setUser((prev) => ({
+      ...prev,
+      ...updatedData,
+    }));
+  };
   useEffect(() => {
     const initializeAuth = async () => {
       const token = getToken();
@@ -60,13 +66,14 @@ export const AuthProvider = ({ children }) => {
         }
       }
       setLoading(false);
-
     };
     initializeAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register ,loading}}>
+    <AuthContext.Provider
+      value={{ user, login, logout, register, loading, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

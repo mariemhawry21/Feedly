@@ -52,6 +52,17 @@ export const getPosts = async () => {
   });
   return response.data;
 };
+export const searchPosts = async (query) => {
+  const response = await fetch(
+    `${API}/posts/search?query=${encodeURIComponent(query)}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return await response.json();
+};
 // Add to post.service.js
 export const updatePostReaction = async (postId, type) => {
   const token = getToken();
@@ -111,4 +122,103 @@ export const deletePost = async (postId) => {
     },
   });
   return response.data;
+};
+export const getComments = async (postId) => {
+  try {
+    const response = await axios.get(`${API}/posts/${postId}/comments`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("comments for this post", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
+export const addComment = async (postId, { content, parentId = null }) => {
+  const token = getToken();
+  try {
+    const response = await axios.post(
+      `${API}/posts/${postId}/comments`,
+      { content, parent: parentId },
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    throw error;
+  }
+};
+export const deleteComment = async (commentId) => {
+  const token = getToken();
+  try {
+    const response = await axios.delete(`${API}/posts/comments/${commentId}`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    throw error;
+  }
+};
+
+export const getCommentReplies = async (commentId) => {
+  try {
+    const response = await axios.get(
+      `${API}/posts/comments/${commentId}/replies`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comment replies:", error);
+    throw error;
+  }
+};
+
+export const likeComment = async (commentId) => {
+  const token = getToken();
+  try {
+    const response = await axios.post(
+      `${API}/posts/comments/${commentId}/like`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error liking comment:", error);
+    throw error;
+  }
+};
+export const fetchCommentLikes = async (commentId) => {
+  try {
+    const response = await axios.get(
+      `${API}/posts/comments/${commentId}/likes`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comment likes:", error);
+    throw error;
+  }
 };

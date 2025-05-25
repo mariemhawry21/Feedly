@@ -23,10 +23,10 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("First Name:", firstname);
-    console.log("Last Name:", lastname);
-    console.log("Email:", email);
-    console.log("Password:", password);
+    // console.log("First Name:", firstname);
+    // console.log("Last Name:", lastname);
+    // console.log("Email:", email);
+    // console.log("Password:", password);
     setError(null);
     setLoading(true);
 
@@ -95,6 +95,7 @@ const Register = () => {
               onChange={(e) => setFirstName(e.target.value)}
               fullWidth
               required
+              autoComplete="given-name"
             />
             <TextField
               label="Last Name"
@@ -104,6 +105,7 @@ const Register = () => {
               onChange={(e) => setLastName(e.target.value)}
               fullWidth
               required
+              autoComplete="family-name"
             />
             <TextField
               label="Email"
@@ -113,6 +115,7 @@ const Register = () => {
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
               required
+              autoComplete="email"
             />
             <TextField
               label="Password"
@@ -122,12 +125,16 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               fullWidth
               required
+              autoComplete="new-password"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
                       onClick={() => setShowPassword((prev) => !prev)}
                       edge="end"
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -180,10 +187,14 @@ const Register = () => {
 
         {!isMobile && (
           <Box flex={1}>
-            <img
+            <motion.img
               src={img}
               alt="illustration"
               style={{ width: "100%", objectFit: "contain" }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              whileHover={{ scale: 1.05 }}
             />
           </Box>
         )}

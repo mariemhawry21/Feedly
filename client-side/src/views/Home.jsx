@@ -9,6 +9,8 @@ import {
   Typography,
   Container,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import PostCard from "../components/PostCard";
@@ -46,14 +48,28 @@ const Home = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Container>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleAddClick}
-          sx={{ mb: 3 }}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "flex-start" },
+            mb: 3,
+          }}
         >
-          Add Post
-        </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleAddClick}
+            sx={{
+              px: 3,
+              transition: "transform 0.2s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
+            }}
+          >
+            Add Post
+          </Button>
+        </Box>
 
         <PostsList handleRequireLogin={handleRequireLogin} />
       </Container>
@@ -79,8 +95,21 @@ const Home = () => {
               exit="exit"
               transition={{ duration: 0.3 }}
             >
-              <DialogTitle sx={{ fontWeight: 600, textAlign: "center" }}>
+              <DialogTitle
+                sx={{
+                  position: "relative",
+                  fontWeight: 600,
+                  textAlign: "center",
+                }}
+              >
                 Please login first
+                <IconButton
+                  aria-label="close"
+                  onClick={() => setOpen(false)}
+                  sx={{ position: "absolute", right: 8, top: 8 }}
+                >
+                  <CloseIcon />
+                </IconButton>
               </DialogTitle>
 
               <DialogContent>

@@ -12,5 +12,9 @@ export const getUserProfile = async (userId) => {
 };
 
 export const updateUserProfile = async (userId, data) => {
-  return axios.put(`${API}/users/${userId}`, data);
+  return axios.put(`${API}/users/${userId}`, data, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`, // Or get from your auth context
+    },
+  });
 };

@@ -15,6 +15,7 @@
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "axios": "^1.9.0",
+    "date-fns": "^4.1.0",
     "jwt-decode": "^4.0.0",
     "motion": "^12.11.3",
     "react": "^19.1.0",

@@ -28,12 +28,15 @@ const PostSchema = new mongoose.Schema(
         },
         type: {
           type: String,
-          enum: ["like", "love", "haha", "wow", "sad", "angry"],
+          enum: ["like", "love", "haha", "wow", "sad", "angry", "care"],
           required: false, // Changed to false to allow removal
         },
       },
     ],
-
+    commentCount: {
+      type: Number,
+      default: 0,
+    },
     createdAt: {
       type: Date,
       default: Date.now,
