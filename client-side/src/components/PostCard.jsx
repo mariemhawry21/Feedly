@@ -46,8 +46,9 @@ import wow from "../assets/wow.svg";
 import angry from "../assets/angry.svg";
 import close from "../assets/close.svg";
 import thumbUp from "../assets/thumbUp.svg";
-import Comment from "./Comment"; 
-import CommentForm from "./CommentForm"; 
+import Comment from "./Comment";
+import CommentForm from "./CommentForm";
+import { toast } from "react-toastify";
 const LikeIcon = () => <img src={like} alt="like" width={28} height={28} />;
 const LoveIcon = () => <img src={love} alt="love" width={28} height={28} />;
 const HahaIcon = () => <img src={haha} alt="haha" width={28} height={28} />;
@@ -198,11 +199,13 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
       setDeleting(true);
       await deletePost(post._id);
       setConfirmOpen(false);
+      toast.success("post deleted successfully");
       onDelete(post._id);
     } catch (err) {
       console.error("Failed to delete:", err);
     } finally {
       setDeleting(false);
+      toast.success("error deleted post");
     }
   };
 

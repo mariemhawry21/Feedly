@@ -9,6 +9,8 @@ import {
   Typography,
   Container,
 } from "@mui/material";
+import Fab from "@mui/material/Fab";
+
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
@@ -46,91 +48,99 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Container>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: { xs: "center", md: "flex-start" },
-            mb: 3,
-          }}
-        >
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleAddClick}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Box sx={{ p: 2 }}>
+        <Container>
+          <Box
             sx={{
-              px: 3,
-              transition: "transform 0.2s ease",
-              "&:hover": {
-                transform: "scale(1.05)",
-              },
+              display: "flex",
+              justifyContent: { xs: "center", md: "flex-start" },
+              mb: 3,
             }}
           >
-            Add Post
-          </Button>
-        </Box>
-
-        <PostsList handleRequireLogin={handleRequireLogin} />
-      </Container>
-
-      <AnimatePresence>
-        {open && (
-          <Dialog
-            open={open}
-            onClose={() => setOpen(false)}
-            sx={{
-              "& .MuiDialog-paper": {
-                overflow: "hidden",
-                borderRadius: "12px",
-                p: 0,
-                background: "#f9f9f9",
-              },
-            }}
-          >
-            <motion.div
-              variants={dialogVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={{ duration: 0.3 }}
+            <Fab
+              color="primary"
+              onClick={handleAddClick}
+              sx={{
+                position: "fixed",
+                bottom: 32,
+                right: 32,
+                zIndex: 1300,
+                boxShadow: 3,
+                "&:hover": { transform: "scale(1.1)" },
+              }}
             >
-              <DialogTitle
-                sx={{
-                  position: "relative",
-                  fontWeight: 600,
-                  textAlign: "center",
-                }}
+              <AddIcon />
+            </Fab>
+          </Box>
+
+          <PostsList handleRequireLogin={handleRequireLogin} />
+        </Container>
+
+        <AnimatePresence>
+          {open && (
+            <Dialog
+              open={open}
+              onClose={() => setOpen(false)}
+              sx={{
+                "& .MuiDialog-paper": {
+                  overflow: "hidden",
+                  borderRadius: "12px",
+                  p: 0,
+                  background: "#f9f9f9",
+                },
+              }}
+            >
+              <motion.div
+                variants={dialogVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.3 }}
               >
-                Please login first
-                <IconButton
-                  aria-label="close"
-                  onClick={() => setOpen(false)}
-                  sx={{ position: "absolute", right: 8, top: 8 }}
+                <DialogTitle
+                  sx={{
+                    position: "relative",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
                 >
-                  <CloseIcon />
-                </IconButton>
-              </DialogTitle>
+                  Please login first
+                  <IconButton
+                    aria-label="close"
+                    onClick={() => setOpen(false)}
+                    sx={{ position: "absolute", right: 8, top: 8 }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </DialogTitle>
 
-              <DialogContent>
-                <Typography align="center" sx={{ mb: 2 }}>
-                  You must be logged in to create a new post.
-                </Typography>
-              </DialogContent>
+                <DialogContent>
+                  <Typography align="center" sx={{ mb: 2 }}>
+                    You need to log in to add a post. Would you like to log in
+                    now?
+                  </Typography>
+                </DialogContent>
 
-              <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
-                <Button variant="outlined" onClick={() => setOpen(false)}>
-                  Cancel
-                </Button>
-                <Button variant="contained" onClick={handleLogin}>
-                  Login
-                </Button>
-              </DialogActions>
-            </motion.div>
-          </Dialog>
-        )}
-      </AnimatePresence>
-    </Box>
+                <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
+                  <Button variant="outlined" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button variant="contained" onClick={handleLogin}>
+                    Login
+                  </Button>
+                </DialogActions>
+              </motion.div>
+            </Dialog>
+          )}
+        </AnimatePresence>
+      </Box>
+    </motion.div>
   );
 };
 

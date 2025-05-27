@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+
 import PostCard from "./PostCard";
 import {
   getPosts,
@@ -97,14 +100,22 @@ const PostsList = ({ handleRequireLogin }) => {
   return (
     <Box sx={{ width: "100%" }}>
       {filteredPosts.length > 0 ? (
-        filteredPosts.map((post) => (
-          <PostCard
+        filteredPosts.map((post,index) => (
+          <motion.div
             key={post._id}
-            post={post}
-            onReact={handleReaction}
-            onDelete={handleDeletePost}
-            handleRequireLogin={handleRequireLogin}
-          />
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+          >
+            <PostCard
+              key={post._id}
+              post={post}
+              onReact={handleReaction}
+              onDelete={handleDeletePost}
+              handleRequireLogin={handleRequireLogin}
+            />
+          </motion.div>
         ))
       ) : (
         <div>No posts found</div>

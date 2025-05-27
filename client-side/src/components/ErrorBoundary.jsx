@@ -25,6 +25,7 @@ class ErrorBoundary extends React.Component {
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
+            height:"100vh"
           }}
         >
           <img

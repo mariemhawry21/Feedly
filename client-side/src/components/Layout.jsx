@@ -150,7 +150,7 @@ function Layout(props) {
           </Typography>
         </motion.div>
         <Typography variant="body1" sx={{ opacity: 0.8, mt: 2 }}>
-          Hi, {auth.user?.firstname}
+          Hi {auth.user?.firstname}
         </Typography>
       </Toolbar>
 

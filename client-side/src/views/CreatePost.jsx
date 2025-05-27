@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { createPost, uploadToCloudinary } from "../services/postService";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -59,8 +59,7 @@ const CreatePost = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null); // Add this line
-
+  const [imagePreview, setImagePreview] = useState(null); 
   const navigate = useNavigate();
 
   const inputRef = useRef(null);
@@ -118,8 +117,8 @@ const CreatePost = () => {
       setTitle("");
       setBody("");
       setImage(null);
-      setImagePreview(null); // Add this line
-      toast.success("Post created successfully");
+      setImagePreview(null); 
+      toast.success("post created successfully");
       navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.error || "Something went wrong");

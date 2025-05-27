@@ -130,7 +130,7 @@ const EditPost = () => {
 
     try {
       await updatePost(id, payload);
-      toast.success("Post updated");
+      toast.success("post updated");
       navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.error || "Update failed");
