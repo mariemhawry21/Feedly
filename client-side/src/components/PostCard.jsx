@@ -32,6 +32,7 @@ import {
   Facebook,
   Close,
   ChatBubbleOutline,
+  ThumbUpAltOutlined,
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -297,9 +298,10 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
     if (!userReaction) {
       return (
         <>
-          <ThumbUp
-            style={{
-              filter: "grayscale(100%)",
+          <ThumbUpAltOutlined
+            sx={{
+              fontSize: 28,
+              color: "black",
               opacity: 0.6,
               "&:hover": { transform: "scale(1.1)" },
               cursor: "pointer",
@@ -314,9 +316,10 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
     if (!reaction) {
       return (
         <>
-          <ThumbUp
-            style={{
-              filter: "grayscale(100%)",
+          <ThumbUpAltOutlined
+            sx={{
+              fontSize: 28,
+              color: "black",
               opacity: 0.6,
               "&:hover": { transform: "scale(1.1)" },
               cursor: "pointer",
@@ -638,7 +641,14 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                   alignItems: "center",
                 }}
               >
-                <ChatBubbleOutline sx={{ width: 28, height: 28 }} />
+                <ChatBubbleOutline
+                  s
+                  sx={{
+                    fontSize: 28,
+                    color: "black",
+                    opacity: 0.6,
+                  }}
+                />
                 <p style={{ marginLeft: "10px" }}>Comment</p>
               </Box>
             </Box>
@@ -656,7 +666,13 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
               }}
             >
               <IconButton aria-label="share" onClick={handleShareClick}>
-                <Share sx={{ width: 28, height: 28 }} />
+                <Share
+                  sx={{
+                    fontSize: 28,
+                    color: "black",
+                    opacity: 0.6,
+                  }}
+                />
               </IconButton>
               <p style={{ marginLeft: "10px" }}>Share</p>
             </Box>
