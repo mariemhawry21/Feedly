@@ -535,9 +535,9 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
             sx={{
               display: "flex",
               alignItems: "center",
+              gap: 1,
               justifyContent: "space-between",
               width: "100%",
-              padding: "0 20px",
             }}
           >
             <style>{bounceAnimation}</style>
