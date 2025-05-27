@@ -697,14 +697,12 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                   p: 1,
                   gap: 1,
                   justifyContent: "center",
-                  flexWrap: "wrap",
                 },
               }}
             >
               <Box
                 sx={{
                   display: "flex",
-                  gap: 1,
                   "& .MuiIconButton-root:hover": { transform: "scale(1.3)" },
                 }}
               >
