@@ -54,7 +54,7 @@ const Home = () => {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <Box sx={{ p: 1 }}>
+      <Box sx={{ p: 0 }}>
         <Container>
           <Box
             sx={{

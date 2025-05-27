@@ -32,7 +32,6 @@ import {
   Facebook,
   Close,
   ChatBubbleOutline,
-  Image,
 } from "@mui/icons-material";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -49,16 +48,95 @@ import thumbUp from "../assets/thumbUp.svg";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 import { toast } from "react-toastify";
-const LikeIcon = () => <img src={like} alt="like" width={28} height={28} />;
-const LoveIcon = () => <img src={love} alt="love" width={28} height={28} />;
-const HahaIcon = () => <img src={haha} alt="haha" width={28} height={28} />;
-const WowIcon = () => <img src={wow} alt="wow" width={28} height={28} />;
-const CareIcon = () => <img src={care} alt="care" width={28} height={28} />;
-const SadIcon = () => <img src={sad} alt="sad" width={28} height={28} />;
-const AngryIcon = () => <img src={angry} alt="angry" width={28} height={28} />;
-const CloseIcon = () => <img src={close} alt="close" width={28} height={28} />;
-const ThumbUp = () => (
-  <img src={thumbUp} alt="thumpUp" width={28} height={28} />
+const LikeIcon = (props) => (
+  <img
+    src={like}
+    alt="like"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const LoveIcon = (props) => (
+  <img
+    src={love}
+    alt="love"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const HahaIcon = (props) => (
+  <img
+    src={haha}
+    alt="haha"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const WowIcon = (props) => (
+  <img
+    src={wow}
+    alt="wow"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const CareIcon = (props) => (
+  <img
+    src={care}
+    alt="care"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const SadIcon = (props) => (
+  <img
+    src={sad}
+    alt="sad"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const AngryIcon = (props) => (
+  <img
+    src={angry}
+    alt="angry"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const CloseIcon = (props) => (
+  <img
+    src={close}
+    alt="close"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
+);
+const ThumbUp = (props) => (
+  <img
+    src={thumbUp}
+    alt="thumpUp"
+    width={28}
+    height={28}
+    style={{ display: "block", ...props.style }}
+    {...props}
+  />
 );
 
 // Reaction types with proper styling
@@ -66,44 +144,27 @@ const reactionTypes = [
   {
     name: "like",
     icon: LikeIcon,
-    color: "primary",
-    customColor: "#1976d2",
   },
   {
     name: "love",
     icon: LoveIcon,
-    color: "error",
-    customColor: "#f44336",
   },
   {
     name: "haha",
     icon: HahaIcon,
-    color: "warning",
-    customColor: "#ff9800",
   },
-  {
-    name: "wow",
-    icon: WowIcon,
-    color: "warning",
-    customColor: "#ffc107",
-  },
+
   {
     name: "care",
     icon: CareIcon,
-    color: "warning",
-    customColor: "#ffc107",
   },
   {
     name: "sad",
     icon: SadIcon,
-    color: "info",
-    customColor: "#2196f3",
   },
   {
     name: "angry",
     icon: AngryIcon,
-    color: "error",
-    customColor: "#d32f2f",
   },
 ];
 
@@ -111,8 +172,6 @@ const reactionTypes = [
 const removeReactionOption = {
   name: null,
   icon: CloseIcon,
-  color: "action",
-  customColor: "#757575",
 };
 
 const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
@@ -274,7 +333,6 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
       <>
         <IconComponent
           style={{
-            color: reaction.customColor,
             animation: `${userReaction ? "bounce 0.5s" : ""}`,
             "&:hover": { transform: "scale(1.1)" },
             cursor: "pointer",
@@ -580,7 +638,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                   alignItems: "center",
                 }}
               >
-                <ChatBubbleOutline sx={{ mr: 0.5 }} />
+                <ChatBubbleOutline sx={{ width: 28, height: 28 }} />
                 <p style={{ marginLeft: "10px" }}>Comment</p>
               </Box>
             </Box>
@@ -598,7 +656,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
               }}
             >
               <IconButton aria-label="share" onClick={handleShareClick}>
-                <Share />
+                <Share sx={{ width: 28, height: 28 }} />
               </IconButton>
               <p style={{ marginLeft: "10px" }}>Share</p>
             </Box>
@@ -633,14 +691,13 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
               transformOrigin={{ vertical: "bottom", horizontal: "center" }}
               sx={{
                 "& .MuiPopover-paper": {
-                  width: "auto",
-                  minWidth: "unset",
-                  maxWidth: "100%",
+                  display: "flex",
                   borderRadius: "24px",
                   boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                   p: 1,
-                  display: "flex",
+                  gap: 1,
                   justifyContent: "center",
+                  flexWrap: "wrap",
                 },
               }}
             >
