@@ -300,7 +300,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
         <>
           <ThumbUpAltOutlined
             sx={{
-              fontSize: 28,
+              fontSize: { xs: 20, md: 28 },
               color: "black",
               opacity: 0.6,
               "&:hover": { transform: "scale(1.1)" },
@@ -318,7 +318,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
         <>
           <ThumbUpAltOutlined
             sx={{
-              fontSize: 28,
+              fontSize: { xs: 20, md: 28 },
               color: "black",
               opacity: 0.6,
               "&:hover": { transform: "scale(1.1)" },
@@ -644,7 +644,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                 <ChatBubbleOutline
                   s
                   sx={{
-                    fontSize: 28,
+                    fontSize: { xs: 20, md: 28 },
                     color: "black",
                     opacity: 0.6,
                   }}
@@ -668,7 +668,7 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
               <IconButton aria-label="share" onClick={handleShareClick}>
                 <Share
                   sx={{
-                    fontSize: 28,
+                    fontSize: { xs: 20, md: 28 },
                     color: "black",
                     opacity: 0.6,
                   }}
