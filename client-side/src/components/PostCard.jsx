@@ -45,7 +45,6 @@ import like from "../assets/like.svg";
 import wow from "../assets/wow.svg";
 import angry from "../assets/angry.svg";
 import close from "../assets/close.svg";
-import thumbUp from "../assets/thumbUp.svg";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 import { toast } from "react-toastify";
@@ -129,16 +128,7 @@ const CloseIcon = (props) => (
     {...props}
   />
 );
-const ThumbUp = (props) => (
-  <img
-    src={thumbUp}
-    alt="thumpUp"
-    width={28}
-    height={28}
-    style={{ display: "block", ...props.style }}
-    {...props}
-  />
-);
+
 
 // Reaction types with proper styling
 const reactionTypes = [
