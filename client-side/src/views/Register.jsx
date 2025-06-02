@@ -20,16 +20,36 @@ const Register = () => {
 
   const isMobile = useMediaQuery("(max-width:600px)");
   const navigate = useNavigate();
+  const validateInputs = () => {
+    if (firstname.trim().length < 2 || firstname.trim().length > 30) {
+      setError("First name must be between 2 and 30 characters");
+      return false;
+    }
 
+    if (lastname.trim().length < 2 || lastname.trim().length > 30) {
+      setError("Last name must be between 2 and 30 characters");
+      return false;
+    }
+
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      setError("Invalid email format");
+      return false;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return false;
+    }
+
+    return true;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("First Name:", firstname);
-    // console.log("Last Name:", lastname);
-    // console.log("Email:", email);
-    // console.log("Password:", password);
     setError(null);
     setLoading(true);
-
+    const isValid = validateInputs();
+    if (!isValid) return;
     const data = {
       firstname,
       lastname,

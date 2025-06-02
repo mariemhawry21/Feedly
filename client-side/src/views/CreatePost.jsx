@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { createPost, uploadToCloudinary } from "../services/postService";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -59,7 +59,7 @@ const CreatePost = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null); 
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   const inputRef = useRef(null);
@@ -89,6 +89,11 @@ const CreatePost = () => {
       return;
     }
 
+    if (title.length < 3) {
+      setLoading(false);
+      toast.error("Title must be at least 3 characters");
+      return;
+    }
     let imageUrl = "";
 
     if (image) {
@@ -117,7 +122,7 @@ const CreatePost = () => {
       setTitle("");
       setBody("");
       setImage(null);
-      setImagePreview(null); 
+      setImagePreview(null);
       toast.success("post created successfully");
       navigate("/");
     } catch (err) {
