@@ -129,7 +129,6 @@ const CloseIcon = (props) => (
   />
 );
 
-
 // Reaction types with proper styling
 const reactionTypes = [
   {
@@ -654,8 +653,9 @@ const PostCard = ({ post, onReact, onDelete, handleRequireLogin }) => {
                   backgroundColor: "#eee",
                 },
               }}
+              onClick={handleShareClick}
             >
-              <IconButton aria-label="share" onClick={handleShareClick}>
+              <IconButton aria-label="share">
                 <Share
                   sx={{
                     fontSize: { xs: 20, md: 28 },
